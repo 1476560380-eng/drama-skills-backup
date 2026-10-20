@@ -13,9 +13,13 @@
 
 ```text
 drama-skills-backup/
-└── skills/
-    └── short-drama-storyboard/
-        └── SKILL.md      ← 分镜技能的规则文件（已升级版）
+├── skills/                          ← 我的升级版（实际使用的文件）
+│   └── short-drama-storyboard/SKILL.md
+└── vendor/                          ← 官方原版全量快照（纯官方，未修改）
+    └── drama-skills-official-2026-10/   ← 快照日期版本，共 11 个 skill
+        ├── short-drama/SKILL.md
+        ├── short-drama-storyboard/SKILL.md   ← 注意：vendor 里是官方原版
+        └── ...（共 11 个 skill，231 个文件）
 ```
 
 目前只备份了**被修改过的文件**。官方原版未改动的 skill（short-drama、
@@ -90,6 +94,7 @@ git push
 | 日期 | 文件 | 内容 |
 |---|---|---|
 | 2026-10-20 | `skills/short-drama-storyboard/SKILL.md` | 新增「增强镜头规格」：镜头技术捕捉 / 配音指令 / SEG 段落 / 0.5s 镜长（初版提交 `50df594`） |
+| 2026-10-20 | `vendor/drama-skills-official-2026-10/` | 新增官方原版全量快照（11 个 skill / 231 文件）；其中 storyboard 从官方 GitHub main 拉取纯原版替换 |
 
 ---
 
