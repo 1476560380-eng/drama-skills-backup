@@ -1,5 +1,7 @@
 # drama-skills-backup
 
+**当前版本：v2.3.0**（见 [VERSION](VERSION) · 完整历史见 [CHANGELOG.md](CHANGELOG.md) · 版本规矩见 [VERSION_POLICY.md](VERSION_POLICY.md)）
+
 [ZenStory AI Drama Skills](https://github.com/zenstory-ai/drama-skills) 的个人定制版本备份仓库。
 这里存放的是**经过本地升级的 skill 文件**，与官方原版的差异都在本仓库里留档。
 

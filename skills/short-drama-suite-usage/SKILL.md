@@ -1,6 +1,7 @@
 ---
 name: short-drama-suite-usage
 description: Use when 提到短剧创作、《末世选择》项目、短剧说明书. 路由全套 short-drama 技能并维护项目状态。
+version: 2.3.0
 ---
 
 # 部署状态
