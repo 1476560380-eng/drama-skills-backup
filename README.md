@@ -96,6 +96,7 @@ git push
 | 2026-10-20 | `skills/short-drama-storyboard/SKILL.md` | 新增「增强镜头规格」：镜头技术捕捉 / 配音指令 / SEG 段落 / 0.5s 镜长（初版提交 `50df594`） |
 | 2026-10-20 | `skills/short-drama-novel-analyze/SKILL.md` | S1 改编价值快评新增「题材赛道对照」一行：报告原著所属短剧赛道与是否在热门序列；热度只认可核对来源，无来源写「未提供热度数据」，不得编造榜单；该行只作选题参照，不参与改编密度判据 |
 | 2026-10-20 | `skills/short-drama-novel-analyze/scripts/heat_probe.py` + `references/heat-sources.md` | 题材热度探针：聚合百度热搜/头条热榜/B站热搜/豆瓣在播剧/番茄小说榜五个免费源，按 16 条短剧赛道统计命中数；文档记录云合/DataEye/红果等需登录源、微博/抖音/猫眼不可用源与引用规范 |
+| 2026-10-20 | `skills/short-drama-suite-usage/SKILL.md` | 新增本地导航技能备份：11 技能路由表、项目状态、热度探针用法（本技能为本地自建，非官方） |
 | 2026-10-20 | `vendor/drama-skills-official-2026-10/` | 新增官方原版全量快照（11 个 skill / 231 文件）；其中 storyboard 从官方 GitHub main 拉取纯原版替换 |
 
 ---
