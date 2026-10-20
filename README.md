@@ -106,6 +106,8 @@ git push
 | 2026-10-20 | `skills/short-drama/SKILL.md` + `scripts/episode_lint.py` + `templates/` | 阶段闸门：局部校验器（缺文档也能跑）+ 视觉设定/分镜模板骨架 + 固定工序顺序，解决「五份齐了才敢检查」和格式漂移 |
 | 2026-10-20 | `skills/short-drama-storyboard/SKILL.md` | 加「交付前必跑」：分镜写完立即跑 `episode_lint.py --only 分镜` |
 | 2026-10-20 | `projects/末世选择/剧集/EP001/` | 视觉设定转契约格式（14 个 `## 类别 · 名称` 条目、画面代称去粗）；分镜补 24 个中文名+运镜字段、IMG 书名号与原名对齐、冻结关键帧转引用块、修 92s→100s 与 SEG-03 20.0→18.0、补 3 处画外声明 |
+| 2026-10-20 | 画幅支持（`short-drama/SKILL.md`、`short-drama-storyboard/SKILL.md` + `references/shot-craft.md`、`short-drama-develop/references/genre-cards/*`、`templates/分镜模板.md`） | 把 16:9 横屏改成一等公民：画幅必须问不要默认竖屏；景别谱系按画幅分支（横屏全谱系可用、竖屏中近特为主）；15 张题材卡 `form: 竖屏连续短剧` 改为跟随项目画幅 |
+| 2026-10-20 | `projects/末世选择/` | 示例项目转 16:9 横屏：`aspect_ratio`→16:9、分镜 27 处画幅句 + 图片提示词 11 处改 `Horizontal 16:9`、brief/story-engine 表述同步 |
 | 2026-10-20 | `vendor/drama-skills-official-2026-10/` | 新增官方原版全量快照（11 个 skill / 231 文件）；其中 storyboard 从官方 GitHub main 拉取纯原版替换 |
 
 ---

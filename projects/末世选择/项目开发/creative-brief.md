@@ -32,12 +32,12 @@
 ## 3. 形式与制作边界
 
 - **主要语言**：中文（zh-CN），提示词英文
-- **画幅/观看场景**：9:16 竖屏短剧
+- **画幅/观看场景**：16:9 横屏短剧
 - **单集与系列形式**：漫剧/AI 动画；第一季 8 集，单集约 90–120 秒（待确认）
 - **可用角色与场景规模**：核心 5–6 人 + 车队背景；场景以公路、废墟、服务区、车厢为主，控制换景
 - **难以承受的制作元素**：大规模人群战斗、复杂群集怪物（一亿只蟑螂等以「光幕文字 + 局部特写 + 反应」表现，不全量展示）
 - **必须保留的视觉/声音特征**：光幕（青蓝色悬浮文字界面）是每集视觉锚点；解析发动时的视觉签名（瞳孔纹路/数据流 + 身体代价可见化）
-- **项目节奏档案（候选）**：漫剧竖屏默认起步，未改动
+- **项目节奏档案（候选）**：漫剧横屏起步，未改动
 
 ```json
 {"status": "proposed", "form": "ai_animated", "first_hook_seconds": 5, "beat_interval_seconds_max": 30, "opposed_reversals_per_episode_min": 1, "end_on_peak": true, "reprise_previous_last_beat": true, "vo_share_max": 0.3, "target_avg_shot_seconds": 2.5, "close_shot_share_min": 0.45, "first_major_payoff_by_episode": 1}
