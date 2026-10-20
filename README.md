@@ -103,6 +103,9 @@ git push
 | 2026-10-20 | `skills/short-drama-novel-analyze/SKILL.md` | S1 改编价值快评新增「题材赛道对照」一行：报告原著所属短剧赛道与是否在热门序列；热度只认可核对来源，无来源写「未提供热度数据」，不得编造榜单；该行只作选题参照，不参与改编密度判据 |
 | 2026-10-20 | `skills/short-drama-novel-analyze/scripts/heat_probe.py` + `references/heat-sources.md` | 题材热度探针：聚合百度热搜/头条热榜/B站热搜/豆瓣在播剧/番茄小说榜五个免费源，按 16 条短剧赛道统计命中数；文档记录云合/DataEye/红果等需登录源、微博/抖音/猫眼不可用源与引用规范 |
 | 2026-10-20 | `skills/short-drama-suite-usage/SKILL.md` | 新增本地导航技能备份：11 技能路由表、项目状态、热度探针用法（本技能为本地自建，非官方） |
+| 2026-10-20 | `skills/short-drama/SKILL.md` + `scripts/episode_lint.py` + `templates/` | 阶段闸门：局部校验器（缺文档也能跑）+ 视觉设定/分镜模板骨架 + 固定工序顺序，解决「五份齐了才敢检查」和格式漂移 |
+| 2026-10-20 | `skills/short-drama-storyboard/SKILL.md` | 加「交付前必跑」：分镜写完立即跑 `episode_lint.py --only 分镜` |
+| 2026-10-20 | `projects/末世选择/剧集/EP001/` | 视觉设定转契约格式（14 个 `## 类别 · 名称` 条目、画面代称去粗）；分镜补 24 个中文名+运镜字段、IMG 书名号与原名对齐、冻结关键帧转引用块、修 92s→100s 与 SEG-03 20.0→18.0、补 3 处画外声明 |
 | 2026-10-20 | `vendor/drama-skills-official-2026-10/` | 新增官方原版全量快照（11 个 skill / 231 文件）；其中 storyboard 从官方 GitHub main 拉取纯原版替换 |
 
 ---

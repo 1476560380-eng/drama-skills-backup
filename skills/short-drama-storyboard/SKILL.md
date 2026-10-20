@@ -190,3 +190,15 @@ license: MIT
 ## 安装维护
 
 只有安装、升级或排障时运行 `python3 scripts/selftest.py`。
+
+## 交付前必跑
+
+分镜写完立即跑局部校验（不需要视频提示词也在）：
+
+```bash
+python3 ../short-drama/scripts/episode_lint.py 剧集/<EP> --only 分镜
+```
+
+它查镜头标题中文名、`运镜` 字段、`图片提示词项` 书名号与原名一致、冻结关键帧引用块、
+`视觉依据` 条目可解析、SEG 时长算术，以及头部合计与逐镜相加是否一致。
+骨架从 `../short-drama/templates/分镜模板.md` 复制，别从空白页起写。

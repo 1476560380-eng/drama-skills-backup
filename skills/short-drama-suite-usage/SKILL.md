@@ -8,6 +8,14 @@ description: Use when 提到短剧创作、《末世选择》项目、短剧说�
 - storyboard 是用户定制升级版（多「增强镜头规格」：三拍式运镜笔触、TTS配音指令、SEG段落、0.5s镜长，默认启用，「精简模式」可关）；来源备份仓库 1476560380-eng/drama-skills-backup（skills/=升级版，vendor/drama-skills-official-2026-10/=官方快照）
 - 升级版未合并官方两条新改进：多镜「场景站位」规范、Seedance 2.0 参考 9 张上限裁剪——用户要合并时从 vendor 版 diff 补
 
+# 质量闸门（每份文档写完就跑）
+```bash
+python3 ~/.hermes/profiles/duanju/skills/short-drama/scripts/episode_lint.py 剧集/EP001
+```
+缺文档也能跑（缺的跳过不算错）；退出码 1 = 有问题。五份齐备后再跑官方 creator_markdown_check.py。
+模板：`short-drama/templates/视觉设定模板.md`、`分镜模板.md`——从模板起写，不要从空白页起。
+工序顺序：定模型+集长 → 出图 → 分镜 → 视频提示词 → 完整核对 → 审查。
+
 # 题材热度取数
 用户问「现在什么题材火 / 查热度 / 哪个赛道热」时，跑 `~/.hermes/profiles/duanju/skills/short-drama-novel-analyze/scripts/heat_probe.py --quiet`（无第三方依赖）。
 - 可用免费源（实测）：百度热搜、头条热榜、B站热搜、豆瓣在播剧、番茄小说榜（书名+简介，小说侧最准）
