@@ -14,7 +14,13 @@
 ```text
 drama-skills-backup/
 ├── skills/                          ← 我的升级版（实际使用的文件）
-│   └── short-drama-storyboard/SKILL.md
+│   ├── short-drama-storyboard/SKILL.md
+│   ├── short-drama-novel-analyze/   ← 题材赛道对照 + heat_probe.py + heat-sources.md
+│   └── short-drama-suite-usage/SKILL.md   ← 本地导航技能（非官方）
+├── projects/                        ← 短剧项目创作内容
+│   └── 末世选择/                    ← short-drama.json + 剧集/EP001 五文档 + 项目开发/
+├── docs/                            ← 使用说明书
+│   └── 短剧创作系统使用说明书.md
 └── vendor/                          ← 官方原版全量快照（纯官方，未修改）
     └── drama-skills-official-2026-10/   ← 快照日期版本，共 11 个 skill
         ├── short-drama/SKILL.md
@@ -22,8 +28,8 @@ drama-skills-backup/
         └── ...（共 11 个 skill，231 个文件）
 ```
 
-目前只备份了**被修改过的文件**。官方原版未改动的 skill（short-drama、
-short-drama-write、short-drama-assets 等共 10 个）不重复备份，可随时用官方命令重新安装。
+`skills/` 只备份**被修改过的文件**；官方原版未改动的 skill（short-drama、short-drama-write、
+short-drama-assets 等）不重复备份，可随时用官方命令重新安装，或从 `vendor/` 取原版。
 
 ---
 
@@ -103,5 +109,15 @@ git push
 
 ## 相关但不在本仓库的内容
 
-- 《末世选择》项目本身（剧本/分镜/提示词等创作文档）在本地 `~/duanju/末世选择/`，属创作内容，不并入本仓库；需要备份时另建仓库
+- 《末世选择》的生成素材（图片/视频/配音等 `制作成果/` 媒体文件）体积大，不并入本仓库；仓库只存文本创作文档
 - 官方未改动的其余 10 个 skill 由上游维护，直接随官方更新
+
+## 日常同步
+
+```bash
+cd ~/drama-skills-backup
+cp ~/.hermes/profiles/duanju/skills/<技能>/SKILL.md skills/<技能>/SKILL.md   # 技能改动
+rsync -a --exclude='制作成果' ~/duanju/末世选择/ projects/末世选择/            # 项目文本
+git add -A && git commit -m "backup: <改了什么>"
+git -c http.proxy=http://127.0.0.1:7897 push                                # 走本地代理
+```
