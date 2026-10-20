@@ -23,6 +23,17 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 SKILL_DIR = HERE.parent  # short-drama/
 
+
+def find_project_tool() -> Path:
+    """project_tool.py 是官方文件；备份仓库里只存改过的文件，所以要兜底找已安装的那份。"""
+    candidates = [HERE / "project_tool.py"]
+    candidates += sorted(Path.home().glob(".hermes/profiles/*/skills/short-drama/scripts/project_tool.py"))
+    candidates += sorted(Path.home().glob(".hermes/skills/short-drama/scripts/project_tool.py"))
+    for c in candidates:
+        if c.exists():
+            return c
+    raise SystemExit("找不到 project_tool.py：先安装官方 short-drama 技能再运行本脚本")
+
 STEP_BY_INPUT = {
     "novel": ("$short-drama-novel-analyze", "先拆原著：章节索引 → 改编价值快评（含题材赛道对照）→ 分集候选"),
     "idea": ("$short-drama-develop", "没有原著文本时从点子/梗概开发：故事引擎 → 分集地图 → 改编契约"),
@@ -49,7 +60,7 @@ def main() -> int:
         print(f"❌ 目录已是项目：{root}", file=sys.stderr)
         return 2
 
-    cmd = [sys.executable, str(SKILL_DIR / "scripts/project_tool.py"), "init", str(root),
+    cmd = [sys.executable, str(find_project_tool()), "init", str(root),
            "--title", args.title, "--aspect-ratio", args.aspect_ratio,
            "--target-seconds", str(args.seconds),
            "--language", args.language, "--prompt-language", args.prompt_language]
