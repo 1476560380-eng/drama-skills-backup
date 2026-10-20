@@ -108,6 +108,7 @@ git push
 | 2026-10-20 | `projects/末世选择/剧集/EP001/` | 视觉设定转契约格式（14 个 `## 类别 · 名称` 条目、画面代称去粗）；分镜补 24 个中文名+运镜字段、IMG 书名号与原名对齐、冻结关键帧转引用块、修 92s→100s 与 SEG-03 20.0→18.0、补 3 处画外声明 |
 | 2026-10-20 | 画幅支持（`short-drama/SKILL.md`、`short-drama-storyboard/SKILL.md` + `references/shot-craft.md`、`short-drama-develop/references/genre-cards/*`、`templates/分镜模板.md`） | 把 16:9 横屏改成一等公民：画幅必须问不要默认竖屏；景别谱系按画幅分支（横屏全谱系可用、竖屏中近特为主）；15 张题材卡 `form: 竖屏连续短剧` 改为跟随项目画幅 |
 | 2026-10-20 | `projects/末世选择/` | 示例项目转 16:9 横屏：`aspect_ratio`→16:9、分镜 27 处画幅句 + 图片提示词 11 处改 `Horizontal 16:9`、brief/story-engine 表述同步 |
+| 2026-10-20 | `skills/short-drama/scripts/start_project.py` + `SKILL.md` + `skills/short-drama-suite-usage/SKILL.md` | 一键开工：四项必答（项目名/每集秒数/目标模型/题材）→ 建项目+写开工清单，缺参数拒跑；小说改编优先流程（拆书→题材赛道对照→改编契约→保留原著主线） |
 | 2026-10-20 | `vendor/drama-skills-official-2026-10/` | 新增官方原版全量快照（11 个 skill / 231 文件）；其中 storyboard 从官方 GitHub main 拉取纯原版替换 |
 
 ---

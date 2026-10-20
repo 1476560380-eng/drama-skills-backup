@@ -98,6 +98,15 @@ python3 {技能目录}/scripts/project_tool.py init ./my-drama --title "示例�
 `format.aspect_ratio`；已确认过的创作者不必每次重问，按项目文件走。画幅一旦定了，
 关键帧正文、图片提示词正文和视频提示词里的画幅描述必须全项目一致——中途改画幅等于重画所有已生成的图。
 
+开新项目时先问清四项（项目名 / 单集秒数 / 目标视频模型 / 题材），再用
+`scripts/start_project.py` 一次建好，它会把答案写进 `项目开发/开工清单.md`，缺参数直接拒绕：
+
+```bash
+python3 {技能目录}/scripts/start_project.py --dir ./新剧 --title "新剧" \
+  --seconds 90 --episodes 10 --model seedance-2.0 --genre "复仇爽剧" [--novel 输入/原著.txt]
+```
+
+
 `init` 只建立配置和空目录；第一次创作时再把文档写入 `剧集/<EP>/`，不预建空文件。
 项目已经建好、用户之后才定下目标视频模型时，把选择写进档案，并同时展示它对时长区间、参考方式和
 正文语言的影响。档案只能从已发布、已接受的创作者决策写入。先在 `输入/profile.jsonl` 写一行决策记录
