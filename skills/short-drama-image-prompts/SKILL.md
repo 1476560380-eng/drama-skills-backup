@@ -62,6 +62,7 @@ license: MIT
 - 功能道具、尺度、材质与文字：[道具板](references/prop-plate.md)
 - 造型和状态变体：[造型与状态变体](references/look-and-state-variant.md)
 - 多对象组合板：[Production Sheet 配方](references/production-sheet-recipes.md)
+- 中文商业设定卡模板（分区版式+HEX色板+留白档案卡）：[中文资产卡模板](references/asset-card-template-zh.md)
 - 比较视觉方向的代表帧：[Lookdev 风格帧](references/lookdev-frame.md)
 - 局部修改和 preserve set：[定点修改](references/edit-and-revision.md)
 - 完成前的可生成性检查：[审查与示例](references/review-and-fixtures.md)
