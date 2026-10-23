@@ -1,12 +1,13 @@
 ---
 name: short-drama-suite-usage
 description: Use when 提到短剧创作、《末世选择》项目、短剧说明书. 路由全套 short-drama 技能并维护项目状态。
-version: 2.3.0
+version: 2.7.0
 ---
 
 # 部署状态
 - 11 个技能已全部部署在 duanju profile：short-drama(总调度) / novel-analyze / develop / write / assets / image-prompts / **storyboard(升级版)** / video-prompts / produce / edit / review
-- storyboard 是用户定制升级版（多「增强镜头规格」：三拍式运镜笔触、TTS配音指令、SEG段落、0.5s镜长，默认启用，「精简模式」可关）；来源备份仓库 1476560380-eng/drama-skills-backup（skills/=升级版，vendor/drama-skills-official-2026-10/=官方快照）
+- storyboard 是用户定制升级版（多「增强镜头规格」：三拍式运镜笔触、TTS配音指令、SEG段落、0.5s镜长、镜头时间码、节尾承接块、**生成包分组**，默认启用，「精简模式」可关）；来源备份仓库 1476560380-eng/drama-skills-backup（skills/=升级版，vendor/drama-skills-official-2026-10/=官方快照）
+- v2.7.0 新增（2026-10-23，源自对标外部优秀分镜样本）：①镜头时间码（标题带全集时间轴）②节尾承接块（轴线锁定/未完成动作/下集待接）③生成包分组（SEG 边界切包+模型原生窗口约束+包间续接链，改片半径从赌单镜降到重一包）④video-prompts 按包输出任务单（出场人物声线锁定+首帧@绑定+位置承接+负面指令前置）
 - 升级版未合并官方两条新改进：多镜「场景站位」规范、Seedance 2.0 参考 9 张上限裁剪——用户要合并时从 vendor 版 diff 补
 
 # 契约避坑（实测踩过的，会全量报错）
