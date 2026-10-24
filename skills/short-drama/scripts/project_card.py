@@ -26,6 +26,17 @@ def read(p: Path) -> str:
         return ""
 
 
+def fmt_sec(v) -> str:
+    """秒数格式化：100 / 100.0 / 90.5 都正确，不会再出现 100→1s。"""
+    if v in (None, ""):
+        return "（未定）"
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return f"{v}"
+    return f"{int(f)}s" if f == int(f) else f"{f:g}s"
+
+
 def pick(pattern: str, text: str, default: str = "") -> str:
     m = re.search(pattern, text, re.M)
     return m.group(1).strip() if m else default
@@ -64,7 +75,7 @@ def collect(root: Path) -> dict:
         alias_map = {}
         if vs:
             for m in re.finditer(r"^## (?:人物|造型) · (.+?)\s*\n(.*?)(?=^## |\Z)", vs, re.M | re.S):
-                a = re.search(r"画面代称[：:]\s*(.+)", m.group(2))
+                a = re.search(r"(?:\*\*)?画面代称(?:\*\*)?[：:]\s*(.+)", m.group(2))
                 if a:
                     alias_map[m.group(1).strip()] = a.group(1).strip()
         eps["alias_map"] = alias_map
@@ -138,7 +149,7 @@ def build(root: Path, data: dict) -> str:
     L.append("## 制作口径")
     L.append("")
     model = data["json_model"] or data["checklist_model"] or "（未定）"
-    L.append(f"- 画幅：**{data['json_aspect'] or '（未定）'}** ｜ 集长：**{(str(data['json_seconds']).rstrip('0').rstrip('.') + 's') if data['json_seconds'] else '（未定）'}** ｜ 集数：**{data['json_eps'] or '（未定）'}**")
+    L.append(f"- 画幅：**{data['json_aspect'] or '（未定）'}** ｜ 集长：**{fmt_sec(data['json_seconds'])}** ｜ 集数：**{data['json_eps'] or '（未定）'}**")
     L.append(f"- 目标视频模型：**{model}** ｜ 题材：{data['genre'] or '（未填）'}")
     L.append(f"- 关键帧正文语言：**{data['checklist_lang'] or '（未填）'}** ｜ 图片提示词语言：**{data['json_lang'] or '（未填）'}**（两者本就不同口径）")
     L.append("")
@@ -225,7 +236,14 @@ def main() -> int:
         print("项目卡是最新的")
         return 0
     card.parent.mkdir(parents=True, exist_ok=True)
-    card.write_text(build(root, data), encoding="utf-8")
+    new = build(root, data)
+    if card.exists():
+        old = read(card)
+        strip = lambda t: "\n".join(l for l in t.splitlines() if not l.startswith("> 生成于"))
+        if strip(old) == strip(new):
+            print(f"内容无变化，跳过写入：{card}")
+            return 0
+    card.write_text(new, encoding="utf-8")
     print(f"已生成 {card}")
     return 0
 

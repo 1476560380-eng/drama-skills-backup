@@ -207,7 +207,7 @@ def main() -> int:
                 f = proj / rel
                 if f.exists() and f.stat().st_mtime > cm + 1:
                     newer.append(rel)
-            for doc in present:
+            for doc in ("分镜", "视觉设定"):   # 项目卡只读这两份，其他文档不影响卡
                 f = root / f"{doc}.md"
                 if f.exists() and f.stat().st_mtime > cm + 1:
                     newer.append(f"{root.name}/{doc}.md")
