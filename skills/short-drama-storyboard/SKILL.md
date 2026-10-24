@@ -1,7 +1,7 @@
 ---
 name: short-drama-storyboard
 description: 把中文短剧剧本和视觉设定写成有戏剧职责、连续性边界与冻结关键帧提示词的分镜 Markdown。用户提出“拆分镜/设计镜头/做镜头表”“场次视觉计划/调度故事板”“比较导演方案”“写首帧/关键帧提示词”或检查轴线、站位、视线、持物连续性时使用；不生成媒体。
-version: 2.10.0
+version: 2.11.0
 license: MIT
 ---
 
@@ -117,6 +117,7 @@ license: MIT
 - **画面位置必写**：有人物出场的镜头，冻结关键帧正文必须含位置句（`on screen-left` / `on screen-right` / `facing screen-…`）；走位穿场镜必须含 `not part of the dialogue axis`；全景重设轴线的镜必须含 `axis resets`。纯物件、纯空镜可免。句式与禁写变体见 [画面位置与轴线锁定](#画面位置与轴线锁定)。
 - **每段开轴线账**：每个 `SEG-` 段落头必须写一行轴线账；**写不出轴线账的场次不得拆分镜**。
 - 起终边界除了逐人姿态，还要写清本镜依赖的身体—物件—空间关系。关系在镜内不变时两端都保留；确需改变时，过程与终点必须有剧本依据。
+- **曝光句必写**：每条冻结关键帧正文必须含一句曝光校准（夜景 `shadows open with visible detail, practical lights protected from clipping`；日景 `highlights held`；火光 `flame cores not blown out`；剪影 `intentional silhouette`）；暗部不许糊死、高光不许烧白、有人物时写清面部受光来源。见 [曝光校准](references/keyframe-craft.md#曝光校准exposure-lock)。
 - 冻结关键帧只写该瞬间能看见的内容；文字、手指、反射和遮挡要可生成。
 - 近景类关键帧挂着地点板生成时，图片常被拉宽成中远景；正文写具体取景（画面切在哪、脸在画面哪里、机位距离），出图仍偏宽就这一镜不挂地点板，把背景写进正文。
 - 一集的关键帧要像同一部片：每条正文共用同一句**质感锁**（如 `photorealistic cinematic still, soft film grain`），而**调色词按 SEG 段落头的色调设计整段翻译**（火海段 `fire-orange grade`、夜视段 `green night-vision grade`），同段一致、段间按翻转设计切换；每个场景写同一句光与色温；段头另声明**光线锚点**（night / dawn / lamplit…）段内帧继承。镜头语言（焦段/景深）按 SEG 段基准+逐镜破格选，见 [关键帧手艺](references/keyframe-craft.md)。生成时先出该场景一张中远景作定调图并接受，其余镜头把它作为最后一张参考、只取色调、光线与质感，不取构图。

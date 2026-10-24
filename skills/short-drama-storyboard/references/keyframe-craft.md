@@ -122,6 +122,38 @@ is legible in this composition; it may not replace the exact wording or policy
 with an untraceable prose instruction. If the policy is still undecided, say so
 instead of inventing a hidden candidate state.
 
+## 曝光校准（Exposure Lock）
+
+**每条关键帧正文必须有一句曝光句。** 只写 `moody` / `dark` / `low-key` / `night` 而不给曝光指令，模型会按最省事的方式渲染：暗部糊成一片、高光烧白、肤色发灰。实测三集 80 条关键帧里 52 条含暗调词、**0 条**含曝光控制——这就是出图偏暗的直接原因。
+
+### 固定句式（按光况选一条，紧跟画风句与镜头声明之后）
+
+| 光况 | 固定句 |
+|---|---|
+| 夜景／低照度 | `Exposure balanced for night: shadows open with visible detail, practical lights protected from clipping` |
+| 日景／强光 | `Exposure balanced for daylight: highlights held on sunlit surfaces, faces not crushed into shadow` |
+| 火光／强源光 | `Exposure balanced for firelight: flame cores not blown out, faces readable in the falloff` |
+| 雪/水面/白墙反光 | `Exposure balanced for high-albedo surfaces: whites held just below clipping, texture kept` |
+| 主动剪影（设计如此） | `Intentional silhouette: figure edges readable against the lit background, no detail inside the silhouette` |
+
+### 三条硬边界
+
+- **暗部不允许糊死**：夜景也要写 `shadow detail`；真正要黑的地方写清是"暗但可辨"还是"纯黑剪影"，二者不可混写。
+- **高光不允许烧白**：光源（路灯、车灯、光幕、火焰核心）必须写 `protected from clipping`；光幕/UI 类另加 `text remains legible, no bloom washing out the characters`。
+- **面部受光要交代来源**：人物在画面里时写 `face lit by <光源>`（侧逆光、手机屏、火光），否则夜景人脸的曝光由模型瞎定，同一集内会忽明忽暗。
+
+### 段头配套：曝光基准
+
+SEG 段落头建议加一行「曝光基准」，写本段的整体亮度口径，段内帧默认继承：
+
+```text
+曝光基准：夜景低照度但保暗部，高光不剪（路灯暖点最亮）
+```
+
+段内确有亮度变化（如从暗室走向火海）时，在该镜正文单独写破格的曝光句，不靠段头糊过去。
+
+---
+
 ## 尾帧：什么时候可以有，以及它换来什么代价（`SHT-17`）
 
 默认每镜一张首帧，冻结 `start_boundary`。交付工作流需要首尾帧时，再补一张投影

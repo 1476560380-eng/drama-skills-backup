@@ -110,7 +110,31 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
             "（补 on screen-left/right 或 facing screen-…；走位镜补 not part of the dialogue axis）"
         )
 
-    # 4. SEG 时长算术
+    # 4. 曝光句覆盖率（渐进：0 镜=提示；写一半=报错）
+    EXP_MARKS = ("exposure balanced", "intentional silhouette", "highlights held",
+                 "shadows open", "protected from clipping", "flame cores not blown out")
+    exp_shots, exp_covered = [], []
+    for sid, block in zip(ids, blocks):
+        kb = re.search(r"### 冻结关键帧(?:提示词)?[ \t]*\n(.*?)(?=\n## |\n### |\Z)", block, re.S)
+        if not kb:
+            continue
+        exp_shots.append(sid)
+        if any(mark in kb.group(1).lower() for mark in EXP_MARKS):
+            exp_covered.append(sid)
+    if exp_shots and not exp_covered:
+        notes.append(
+            f"分镜.md: 本集未启用曝光校准（0/{len(exp_shots)} 镜有曝光句）"
+            "——老集可忽略；新集请按 references/keyframe-craft.md「曝光校准」补写"
+        )
+    elif exp_shots and len(exp_covered) < len(exp_shots):
+        missing = [sid for sid in exp_shots if sid not in exp_covered]
+        shown = "、".join(missing[:8]) + ("等" if len(missing) > 8 else "")
+        errs.append(
+            f"分镜.md: 曝光校准已启用（{len(exp_covered)}/{len(exp_shots)} 镜），以下镜缺曝光句：{shown}"
+            "（夜景加 shadows open with visible detail, practical lights protected from clipping）"
+        )
+
+    # 5. SEG 时长算术
     segs = re.split(r"^## SEG-[^\n]*$", text, flags=re.M)
     seg_heads = SEG_HEAD_RE.findall(text)
     for claim, body in zip(seg_heads, segs[1:]):

@@ -5,6 +5,31 @@
 
 ---
 
+## v2.11.0 — 2026-10-24
+
+**关键帧控制曝光：每条关键帧强制一句曝光校准（MINOR）。** 起因：用户反馈出图有的太暗有的太亮。实测三集 80 条关键帧——52 条含暗调词（dark/night/shadow/silhouette），**0 条**含任何曝光控制词，等于把曝光全交给模型默认行为。
+
+### 改了哪些
+
+- **storyboard 2.11.0**：①「镜头要求」新增「曝光句必写」硬规矩 ②`references/keyframe-craft.md` 新增「曝光校准（Exposure Lock）」一节：五种光况固定句式（夜景／日景／火光／高反光面／主动剪影）、三条硬边界（暗部不糊死、高光不烧白、面部受光写来源）、段头「曝光基准」配套 ③分镜模板契约加第 9 条、关键帧示例要求写曝光句
+- **short-drama 2.5.0**：`episode_lint.py` 新增曝光句覆盖率校验，与轴线锁同一套渐进逻辑（0 镜=提示、写一半=报错）
+- **《阈限空间》EP001 SHOT-001 示范**：补 `Exposure balanced for night: shadows stay open with visible stone and moss detail, the streetlamp glow protected from clipping, his face lit only by that far lamp…`，段头补「曝光基准」行
+
+### 优化了哪些
+
+- **治的是「只说气氛不给曝光」**：`moody teal-and-amber` + `night` 这类词只表达情绪，模型默认把夜景压到看不见暗部、把光源烧成白块；曝光句把「暗但看得见」「亮但不糊」写成可执行指令
+- **剪影也要声明**：主动剪影写 `Intentional silhouette`，避免和「暗部糊死」混为一谈
+- **光幕/UI 类风险单列**：可读文字镜头要求 `text remains legible, no bloom washing out the characters`
+- **渐进不误伤**：老集 0 镜曝光句只出一行 `ⓘ`，退出码 0
+
+### 兼容性验证
+
+- 三集实测：末世选择 EP001、阈限空间 EP002 各出 `ⓘ 未启用曝光校准`，退出码 0；阈限空间 EP001 因只补了 SHOT-001，按设计报「1/29 写一半」
+- storyboard `scripts/selftest.py` 13 项全过
+- 未改动 SHOT 块结构、字段集与其他校验链；曝光句只追加在英文正文
+
+---
+
 ## v2.10.0 — 2026-10-24
 
 **分镜自带轴线：画面位置写进冻结关键帧提示词，越轴从源头防（MINOR）。** 起因：ShotLock 15 条实测发现最值钱的越轴规则在我们分镜上全程静默——分镜里没有「谁在画面哪侧」的数据。方案定为「把左右写进提示词本身」，不新增字段、不产出检查文件。
