@@ -1,13 +1,14 @@
 ---
 name: short-drama-suite-usage
 description: Use when 提到短剧创作、《末世选择》项目、短剧说明书. 路由全套 short-drama 技能并维护项目状态。
-version: 2.9.0
+version: 2.10.0
 ---
 
 # 部署状态
 - 11 个技能已全部部署在 duanju profile：short-drama(总调度) / novel-analyze / develop / write / assets / image-prompts / **storyboard(升级版)** / video-prompts / produce / edit / review
 - storyboard 是用户定制升级版（多「增强镜头规格」：三拍式运镜笔触、TTS配音指令、SEG段落、0.5s镜长、镜头时间码、节尾承接块、**生成包分组**，默认启用，「精简模式」可关）；来源备份仓库 1476560380-eng/drama-skills-backup（skills/=升级版，vendor/drama-skills-official-2026-10/=官方快照）
 - v2.7.0 新增（2026-10-23，源自对标外部优秀分镜样本）：①镜头时间码（标题带全集时间轴）②节尾承接块（轴线锁定/未完成动作/下集待接）③生成包分组（SEG 边界切包+模型原生窗口约束+包间续接链，改片半径从赌单镜降到重一包）④video-prompts 按包输出任务单（出场人物声线锁定+首帧@绑定+位置承接+负面指令前置）
+- v2.10.0 新增（2026-10-24，画面位置与轴线锁）：①SEG 段头必写轴线账（画面左/右固定）②每镜关键帧正文写固定句式画面位置（双人/单人/特写/走位/全景重设五种）③走位穿场标 `not part of the dialogue axis` ④禁写变体（on the left side / left third 等）⑤episode_lint 新增渐进式覆盖率校验：0 镜=提示、写一半=报错、纯物件镜不计。**左右锁直接长在提示词里，不产出检查文件**；《末世选择》EP001 已全部 22 个人物镜回填，lint 通过
 - v2.8.0 新增（2026-10-24，情绪工程层）：①先画曲线再分镜（references/rhythm-emotion-design.md）②四题材曲线形状库（爽文/悬疑/温情/群像，示例不是规定）③段间反差设计 ④声音当节奏工具（静音蓄力/J-cut/L-cut/声音减法）⑤三种蒙太奇压缩配方 ⑥防串味自检；SEG 可选「节奏定位」字段；lighting-craft 补段间色彩翻转+情绪-光色映射；keyframe-craft 补微表情六通道词表
 - v2.9.0 新增（2026-10-24，镜头语言+段级调色，含一处契约修订）：①SEG 段「镜头基准」焦段/景深三层选法（段基准→逐镜破格→景别兜底表）②SEG 段「光线锚点」③关键帧画风句拆「全局质感锁 + 按段翻译的调色词」（10 组中文色调→英文 grade 对照）④微表情「动作后定格」写法+三条判例 ⑤帧尾可选情绪钩子；video-prompts 2.7.1 补「多镜容器正文声明总镜数」（未实测）
 - 升级版未合并官方两条新改进：多镜「场景站位」规范、Seedance 2.0 参考 9 张上限裁剪——用户要合并时从 vendor 版 diff 补

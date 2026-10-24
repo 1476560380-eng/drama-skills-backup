@@ -46,7 +46,9 @@ def check_setting(text: str, errs: list[str]) -> set[tuple[str, str]]:
     return entries
 
 
-def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str]) -> None:
+def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
+                     notes: list[str] | None = None) -> None:
+    notes = notes if notes is not None else []
     heads = SHOT_HEAD_RE.findall(text)
     if not heads:
         errs.append("分镜.md: 没有 `## SHOT-...` 镜头块")
@@ -81,7 +83,34 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str]) 
                 if (m.group(1), m.group(2).strip()) not in entries:
                     errs.append(f"{sid}: 视觉依据指向不存在的条目 {m.group(1)}「{m.group(2)}」")
 
-    # 3. SEG 时长算术
+    # 3. 轴线锁覆盖率（渐进：整集 0 镜=提示不算错；写一半=报错。纯物件/空镜不计入）
+    POS_MARKS = ("on screen-left", "on screen-right", "from screen-left", "from screen-right",
+                 "facing screen-", "not part of the dialogue axis", "resets the axis")
+    char_shots, covered = [], []
+    for sid, block in zip(ids, blocks):
+        if "人物「" not in block:      # 视觉依据里没有人物条目 = 物件/空镜，免写
+            continue
+        char_shots.append(sid)
+        kb = re.search(r"### 冻结关键帧(?:提示词)?[ \t]*\n(.*?)(?=\n## |\n### |\Z)", block, re.S)
+        if kb and any(mark in kb.group(1) for mark in POS_MARKS):
+            covered.append(sid)
+    if not char_shots:
+        notes.append("分镜.md: 本集没有非物件镜头，轴线锁不适用")
+    elif not covered:
+        notes.append(
+            f"分镜.md: 本集未启用轴线锁（0/{len(char_shots)} 个有人物镜头有画面位置）"
+            "——老集可忽略；新集请按 SKILL.md「画面位置与轴线锁定」补写"
+        )
+    elif len(covered) < len(char_shots):
+        missing = [sid for sid in char_shots if sid not in covered]
+        shown = "、".join(missing[:8]) + ("等" if len(missing) > 8 else "")
+        errs.append(
+            f"分镜.md: 轴线锁已启用（{len(covered)}/{len(char_shots)} 个有人物镜头），"
+            f"以下镜缺画面位置：{shown}"
+            "（补 on screen-left/right 或 facing screen-…；走位镜补 not part of the dialogue axis）"
+        )
+
+    # 4. SEG 时长算术
     segs = re.split(r"^## SEG-[^\n]*$", text, flags=re.M)
     seg_heads = SEG_HEAD_RE.findall(text)
     for claim, body in zip(seg_heads, segs[1:]):
@@ -114,6 +143,7 @@ def main() -> int:
     present = [n for n, t in docs.items() if t is not None]
     missing = [n for n, t in docs.items() if t is None]
     errs: list[str] = []
+    notes: list[str] = []
 
     if args.only:
         present = [args.only] if docs[args.only] is not None else []
@@ -125,7 +155,7 @@ def main() -> int:
     if docs["分镜"] and (not args.only or args.only == "分镜"):
         if not entries and docs["视觉设定"]:
             entries = {(m.group(1), m.group(2).strip()) for m in SETTING_HEADING_RE.finditer(docs["视觉设定"])}
-        check_storyboard(docs["分镜"], entries, errs)
+        check_storyboard(docs["分镜"], entries, errs, notes)
 
     result = {
         "episode": str(root),
@@ -133,6 +163,7 @@ def main() -> int:
         "missing": missing,
         "errors": errs,
         "error_count": len(errs),
+        "notes": notes,
         "ok": not errs,
     }
     if args.json:
@@ -141,6 +172,9 @@ def main() -> int:
         print(f"已存在: {'、'.join(present) or '无'}")
         if missing:
             print(f"缺失  : {'、'.join(missing)}（本次跳过，不算错）")
+        if notes:
+            for n in notes:
+                print(f"\nⓘ {n}")
         if errs:
             print(f"\n发现 {len(errs)} 个问题：")
             for e in errs:

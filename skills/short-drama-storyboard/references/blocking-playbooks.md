@@ -91,6 +91,8 @@ working side：摄影机常驻红毯一侧
 写成 `<working side>` 这类占位等于没写。判据是：换一个人来拍下一镜，他能不能只读这
 三行就把机位放对。
 
+> 这三行在 `分镜.md` 里的落地形式是：**SEG 段头写轴线账，每镜关键帧正文写画面位置句**（`on screen-left` / `on screen-right` / `facing screen-…` / 走位镜 `not part of the dialogue axis`）。同一套记法，不另立第二套；句式与禁写变体见 SKILL.md 的「画面位置与轴线锁定」。
+
 ### 正反打的配对规则
 
 - **屏幕方向必须互补**：A 镜里甲在画面左看向右，B 镜里乙就必须在画面右看向左。两镜

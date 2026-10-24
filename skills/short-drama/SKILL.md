@@ -1,7 +1,7 @@
 ---
 name: short-drama
 description: 基于文件系统初始化和继续短剧或漫剧项目，提供 creator-first 五文档路由、本地 Dashboard、制作形态与 Look Development 决策。用户提出“创建/继续短剧项目”“看进度/下一步”“做 Look Development”“打开 dashboard/短剧创作台”“导出制作资料”，或任务跨多个创作阶段时使用；明确的写作、资产、提示词、分镜、剪辑或审查请求由对应子 skill 直接处理。
-version: 2.3.0
+version: 2.4.0
 license: MIT
 ---
 
@@ -27,6 +27,18 @@ python3 {技能目录}/scripts/episode_lint.py 剧集/<EP> --only 分镜 # 只�
 
 退出码 1 表示有问题，逐条改完再进下一阶段。五份齐备后再跑一次官方 `creator_markdown_check.py`
 做完整跨文档核对——它才是最终闸门。
+
+### 轴线锁覆盖率（2.4.0 起，渐进不误伤）
+
+`episode_lint.py` 会顺带核对分镜的**画面位置句**（见 `$short-drama-storyboard` 的「画面位置与轴线锁定」）：
+
+| 情况 | 反应 |
+|---|---|
+| 有人物镜头里 0 镜写位置句 | 只打印 `ⓘ` 提示，**不算错**（老集不受影响） |
+| 部分写、部分没写 | **报错**并列出缺写的镜号（写了一半不放过） |
+| 全部写 | 通过 |
+
+只核「有没有写」，不判左右对错；纯物件／空镜（视觉依据里无 `人物「…」`）不计入。`--json` 输出多一个 `notes` 字段。
 
 **从骨架起步，不要从空白页起步。** 视觉设定与分镜直接复制
 [templates/视觉设定模板.md](templates/视觉设定模板.md)、[templates/分镜模板.md](templates/分镜模板.md)
