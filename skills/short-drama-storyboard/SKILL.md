@@ -1,7 +1,7 @@
 ---
 name: short-drama-storyboard
 description: 把中文短剧剧本和视觉设定写成有戏剧职责、连续性边界与冻结关键帧提示词的分镜 Markdown。用户提出“拆分镜/设计镜头/做镜头表”“场次视觉计划/调度故事板”“比较导演方案”“写首帧/关键帧提示词”或检查轴线、站位、视线、持物连续性时使用；不生成媒体。
-version: 2.7.0
+version: 2.8.0
 license: MIT
 ---
 
@@ -88,7 +88,7 @@ license: MIT
 
 - **镜头技术捕捉**：三拍式摄影师笔触——起幅（从什么状态/前景/焦点起）→ 运镜意图（为什么这样动或不动）→ 落幅交接（停在哪一格、下一镜从哪里接）。写执行逻辑，不堆氛围形容词。
 - **配音指令**：凡本镜有对白/VO/OS 的说话者，逐句标注 `角色｜音色｜状态｜语速`，供 TTS 直接使用；纯音效镜不标。
-- **SEG 段落**：每 3–5 镜归入一个 `SEG-...` 段落头，写总时长、情绪基调与色调（如「压抑对峙 + 冷灰调」）、场景设计一句话；段内光色口径一致。
+- **SEG 段落**：每 3–5 镜归入一个 `SEG-...` 段落头，写总时长、情绪基调与色调（如「压抑对峙 + 冷灰调」）、场景设计一句话；段内光色口径一致。可选加一行「节奏定位」（快切/工作节奏/慢板/收口），写相邻段反差的设计意图，见 [节奏与情绪设计](references/rhythm-emotion-design.md)。
 - **镜长精度 0.5s**：镜长写 `X.Ys`；对白镜先按发声时间估，再排动作与停顿。
 
 ## 镜头要求
@@ -173,6 +173,7 @@ license: MIT
 - 检查原文是否都有画面承载：[Coverage Audition](references/coverage-audition.md)
 - 多人、群体和复杂空间调度：[调度手册](references/blocking-playbooks.md)
 - 谁被照亮、怎么写才执行得出：[光的设计](references/lighting-craft.md)
+- 情绪曲线、段间节奏反差、声音节拍与蒙太奇压缩：[节奏与情绪设计](references/rhythm-emotion-design.md)
 - 冻结瞬间、注意中心和可读性：[关键帧手艺](references/keyframe-craft.md)
 - 漫剧/二维漫画形态的共享画风词汇：[漫剧关键帧词表](references/comic-keyframe-lexicon.md)
 - 剧本事实到关键帧的完整示例：[剧本到关键帧](references/screenplay-to-keyframe-example.md)

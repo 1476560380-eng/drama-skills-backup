@@ -37,6 +37,21 @@ accepted shot. A keyframe is not a compressed video prompt.
    a close-up cannot carry a full-body retreat. Naming only the emotion ("愤怒")
    leaves the translation to a downstream stage, and the keyframe is the first
    frame — a mistranslation there is wrong from frame one.
+   情绪名不是画面。落到正文时从一个**可见通道**里选词，候选词表（按部位，当前
+   景别读得出的才用）：
+
+   | 通道 | 候选词 |
+   |---|---|
+   | 眼 | 瞳孔猛缩、目光钉在、避开视线、眼眶发红、眨眼频率变快、失焦 |
+   | 眉/额 | 眉心拧起、眉梢挑起、额头绷紧、抬眉停住 |
+   | 口鼻 | 嘴角抽动、嘴唇抿成线、唇色发白、喉结滚动、咬住下唇、呼吸变浅 |
+   | 手 | 指节攥白、指尖发抖、手指收拢又松开、拇指摩挲、手停在半空 |
+   | 肩背 | 肩膀绷直、肩膀垮下来、微微后缩、脊背挺住不动 |
+   | 整体 | 僵住、晃了一下、重心前压、退了半步又站定 |
+
+   词表是候选库不是公式：同一个「克制」可以走手（拇指摩挲）也可以走肩（绷直），
+   选当前景别和人物性格读得出的那一个。写在正文里的是那个具体通道的词，不是
+   情绪名本身——「愤怒」留给镜头职责字段，「指节攥白」才进关键帧。
 7. **Light and atmosphere:** inherit accepted direction/time/weather; add only
    frame-relevant detail.
 8. **Text policy:** readable/symbolic/blank/postproduction for visible surfaces.
