@@ -49,9 +49,21 @@ def check_setting(text: str, errs: list[str]) -> set[tuple[str, str]]:
 def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
                      notes: list[str] | None = None) -> None:
     notes = notes if notes is not None else []
-    # 0. 规格自声明：写 `- 规格：v2.13` 起本集强制，未写视为老集（只提示）
-    m_spec = re.search(r"规格[：:]\s*v?(\d+)\.(\d+)", text)
-    strict = bool(m_spec) and (int(m_spec.group(1)), int(m_spec.group(2))) >= (2, 13)
+    # 0. 强制项声明（fail-closed）：默认全部强制；老集必须显式写 `- 规格：legacy` 才豁免
+    #    `- 强制项：轴线锁、亮度口径` 可指定只强制其中几项（不写 = 两项都强制）
+    legacy = bool(re.search(r"规格[：:]\s*legacy", text, re.I))
+    m_items = re.search(r"强制项[：:]\s*(.+)", text)
+    items = None
+    if m_items:
+        raw = m_items.group(1)
+        items = set()
+        if "轴线" in raw:
+            items.add("axis")
+        if "亮度" in raw or "曝光" in raw:
+            items.add("exposure")
+    strict_axis = (not legacy) and (items is None or "axis" in items)
+    strict_exp = (not legacy) and (items is None or "exposure" in items)
+    strict = strict_axis or strict_exp
 
     heads = SHOT_HEAD_RE.findall(text)
     if not heads:
@@ -103,12 +115,12 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
     elif not covered:
         msg = (f"分镜.md: 本集未启用轴线锁（0/{len(char_shots)} 个有人物镜头有画面位置）"
                "——请按 SKILL.md「画面位置与轴线锁定」补写")
-        (errs if strict else notes).append(msg)
+        (errs if strict_axis else notes).append(msg)
     elif len(covered) < len(char_shots):
         missing = [sid for sid in char_shots if sid not in covered]
         shown = "、".join(missing[:8]) + ("等" if len(missing) > 8 else "")
-        errs.append(
-            f"分镜.md: 轴线锁已启用（{len(covered)}/{len(char_shots)} 个有人物镜头），"
+        (errs if strict_axis else notes).append(
+            f"分镜.md: 轴线锁覆盖 {len(covered)}/{len(char_shots)} 个有人物镜头，"
             f"以下镜缺画面位置：{shown}"
             "（补 on screen-left/right 或 facing screen-…；走位镜补 not part of the dialogue axis）"
         )
@@ -128,12 +140,12 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
     if exp_shots and not exp_covered:
         msg = (f"分镜.md: 本集未启用曝光校准（0/{len(exp_shots)} 镜有亮度口径）"
                "——请按 references/keyframe-craft.md「亮度设计」补写")
-        (errs if strict else notes).append(msg)
+        (errs if strict_exp else notes).append(msg)
     elif exp_shots and len(exp_covered) < len(exp_shots):
         missing = [sid for sid in exp_shots if sid not in exp_covered]
         shown = "、".join(missing[:8]) + ("等" if len(missing) > 8 else "")
-        errs.append(
-            f"分镜.md: 曝光校准已启用（{len(exp_covered)}/{len(exp_shots)} 镜），以下镜缺曝光句：{shown}"
+        (errs if strict_exp else notes).append(
+            f"分镜.md: 亮度口径覆盖 {len(exp_covered)}/{len(exp_shots)} 镜，以下镜缺曝光句：{shown}"
             "（夜景加 shadows open with visible detail, practical lights protected from clipping）"
         )
 
