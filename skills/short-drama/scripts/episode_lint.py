@@ -49,6 +49,10 @@ def check_setting(text: str, errs: list[str]) -> set[tuple[str, str]]:
 def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
                      notes: list[str] | None = None) -> None:
     notes = notes if notes is not None else []
+    # 0. 规格自声明：写 `- 规格：v2.13` 起本集强制，未写视为老集（只提示）
+    m_spec = re.search(r"规格[：:]\s*v?(\d+)\.(\d+)", text)
+    strict = bool(m_spec) and (int(m_spec.group(1)), int(m_spec.group(2))) >= (2, 13)
+
     heads = SHOT_HEAD_RE.findall(text)
     if not heads:
         errs.append("分镜.md: 没有 `## SHOT-...` 镜头块")
@@ -97,10 +101,9 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
     if not char_shots:
         notes.append("分镜.md: 本集没有非物件镜头，轴线锁不适用")
     elif not covered:
-        notes.append(
-            f"分镜.md: 本集未启用轴线锁（0/{len(char_shots)} 个有人物镜头有画面位置）"
-            "——老集可忽略；新集请按 SKILL.md「画面位置与轴线锁定」补写"
-        )
+        msg = (f"分镜.md: 本集未启用轴线锁（0/{len(char_shots)} 个有人物镜头有画面位置）"
+               "——请按 SKILL.md「画面位置与轴线锁定」补写")
+        (errs if strict else notes).append(msg)
     elif len(covered) < len(char_shots):
         missing = [sid for sid in char_shots if sid not in covered]
         shown = "、".join(missing[:8]) + ("等" if len(missing) > 8 else "")
@@ -123,10 +126,9 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
         if any(mark in kb.group(1).lower() for mark in EXP_MARKS):
             exp_covered.append(sid)
     if exp_shots and not exp_covered:
-        notes.append(
-            f"分镜.md: 本集未启用曝光校准（0/{len(exp_shots)} 镜有曝光句）"
-            "——老集可忽略；新集请按 references/keyframe-craft.md「曝光校准」补写"
-        )
+        msg = (f"分镜.md: 本集未启用曝光校准（0/{len(exp_shots)} 镜有亮度口径）"
+               "——请按 references/keyframe-craft.md「亮度设计」补写")
+        (errs if strict else notes).append(msg)
     elif exp_shots and len(exp_covered) < len(exp_shots):
         missing = [sid for sid in exp_shots if sid not in exp_covered]
         shown = "、".join(missing[:8]) + ("等" if len(missing) > 8 else "")
