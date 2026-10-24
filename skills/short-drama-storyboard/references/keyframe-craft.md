@@ -122,11 +122,36 @@ is legible in this composition; it may not replace the exact wording or policy
 with an untraceable prose instruction. If the policy is still undecided, say so
 instead of inventing a hidden candidate state.
 
-## 曝光校准（Exposure Lock）
+## 亮度设计（调色词 → 光比 → 补光 → 曝光句）
 
-**每条关键帧正文必须有一句曝光句。** 只写 `moody` / `dark` / `low-key` / `night` 而不给曝光指令，模型会按最省事的方式渲染：暗部糊成一片、高光烧白、肤色发灰。实测三集 80 条关键帧里 52 条含暗调词、**0 条**含曝光控制——这就是出图偏暗的直接原因。
+出图偏暗的根因通常不在缺一句 "exposure balanced"，而在**调色词先压暗、光只给单侧**。实测三集 80 条关键帧：**79 条**以 `moody` / `muted` / `dark interior` / `deep blue night` / `dusky` 这类压暗调色词开头，只有 **18 条**写过补光或环境光词，11 条只给侧光/逆光。模型读到「moody + 侧逆光」就按最省事的方式渲染：暗部糊死、人脸埋在阴影里。所以亮度要按下面四层一起控。
 
-### 固定句式（按光况选一条，紧跟画风句与镜头声明之后）
+### 第 1 层：调色词拆色相与明度（最容易漏的一层）
+
+`moody teal-and-amber grade` 同时给了色相和「压暗」的暗示，但没说明度。写法改成**色相 + 明度**两段：
+
+```text
+teal-and-amber grade, mid-key exposure, shadows lifted to about 15% grey
+```
+
+| 禁止 | 改为 |
+|---|---|
+| 单独用 `moody` / `muted` / `dark` 代表整体亮度 | `mid-key exposure` / `lifted blacks` / `low-key but readable` |
+| `dark interior` 当唯一光线说明 | `dark interior lit by <实用光源>，阴影提亮到可辨` |
+| `deep blue night` 单独出现 | `deep blue night, skyglow acting as ambient fill` |
+
+### 第 2 层：每条关键帧写主光 + 补光（光比）
+
+- 写 `key: <光源> from <方向>` 与 `fill: <光源> from <方向>` 两条；补光可以是路灯反光、天光、手机屏、火光余晖、湿地面反射。
+- 人脸对背景的亮度比控制在 **≤1:4**；超过时必须声明是刻意压暗（`deliberate high contrast, face still readable`）。
+- **逆光/夜景镜必须写 fill 来源**——没有补光的逆光就是黑脸，这是出图最常翻的车。
+- 光源有具体位置（`the streetlamp behind him at alley depth`），不要写「有光」。
+
+### 第 3 层：负面指令兜底
+
+关键帧末尾或平台负面词里加：`underexposed, crushed blacks, murky shadows, too dark to read, muddy midtones`。这是防模型回落到默认压暗行为的最低成本手段。
+
+### 第 4 层：曝光句（每镜必写）
 
 | 光况 | 固定句 |
 |---|---|
@@ -136,21 +161,21 @@ instead of inventing a hidden candidate state.
 | 雪/水面/白墙反光 | `Exposure balanced for high-albedo surfaces: whites held just below clipping, texture kept` |
 | 主动剪影（设计如此） | `Intentional silhouette: figure edges readable against the lit background, no detail inside the silhouette` |
 
-### 三条硬边界
-
-- **暗部不允许糊死**：夜景也要写 `shadow detail`；真正要黑的地方写清是"暗但可辨"还是"纯黑剪影"，二者不可混写。
-- **高光不允许烧白**：光源（路灯、车灯、光幕、火焰核心）必须写 `protected from clipping`；光幕/UI 类另加 `text remains legible, no bloom washing out the characters`。
-- **面部受光要交代来源**：人物在画面里时写 `face lit by <光源>`（侧逆光、手机屏、火光），否则夜景人脸的曝光由模型瞎定，同一集内会忽明忽暗。
+三条硬边界不变：**暗部不糊死**（写 `shadow detail`，要纯黑必须说清是剪影）、**高光不烧白**（`protected from clipping`；UI/光幕加 `text remains legible, no bloom`）、**面部受光写来源**（`face lit by <光源>`）。
 
 ### 段头配套：曝光基准
 
-SEG 段落头建议加一行「曝光基准」，写本段的整体亮度口径，段内帧默认继承：
+SEG 段落头写一行「曝光基准」，段内帧默认继承：
 
 ```text
-曝光基准：夜景低照度但保暗部，高光不剪（路灯暖点最亮）
+曝光基准：夜景低照度但保暗部，高光不剪（路灯暖点最亮）；补光＝巷口天光与湿地面反射，人脸对背景 ≤1:4
 ```
 
-段内确有亮度变化（如从暗室走向火海）时，在该镜正文单独写破格的曝光句，不靠段头糊过去。
+段内亮度确有变化（暗室 → 火海）时，在该镜正文写破格句，不靠段头糊过去。
+
+### 定调图是亮度基线（批量前唯一闸门）
+
+先出该场景一张**中远景**定调图并接受；**暗部细节读不出来就调亮重出**，不要带着暗基线去批量。后续镜把它当最后一张参考时只取色调/光线/质感、不取构图——但**基线亮度会跟着走**，所以定调图暗了，整场都会暗。
 
 ---
 

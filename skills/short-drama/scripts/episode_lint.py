@@ -112,7 +112,8 @@ def check_storyboard(text: str, entries: set[tuple[str, str]], errs: list[str],
 
     # 4. 曝光句覆盖率（渐进：0 镜=提示；写一半=报错）
     EXP_MARKS = ("exposure balanced", "intentional silhouette", "highlights held",
-                 "shadows open", "protected from clipping", "flame cores not blown out")
+                 "shadows open", "protected from clipping", "flame cores not blown out",
+                 "mid-key", "lifted blacks", "lifted to about", "fill:", "ambient fill")
     exp_shots, exp_covered = [], []
     for sid, block in zip(ids, blocks):
         kb = re.search(r"### 冻结关键帧(?:提示词)?[ \t]*\n(.*?)(?=\n## |\n### |\Z)", block, re.S)

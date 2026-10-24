@@ -5,6 +5,31 @@
 
 ---
 
+## v2.12.0 — 2026-10-24
+
+**亮度四层：治「出图暗区太暗」（MINOR）。** 起因：v2.11.0 加了曝光句后用户实测出图仍然偏暗。复查发现根因不在曝光句缺失——80 条关键帧里 **79 条**以 `moody` / `muted` / `dark interior` / `deep blue night` / `dusky` 这类压暗调色词开头，只有 18 条写过补光/环境光，11 条只给侧光或逆光。调色词先压暗、光又只给单侧，一句 exposure balanced 压不住。
+
+### 改了哪些
+
+- **storyboard 2.12.0**：①`keyframe-craft.md` 的「曝光校准」整章重写为「亮度设计（调色词 → 光比 → 补光 → 曝光句）」四层：调色词拆色相与明度（禁单用 moody/muted 代表亮度、附禁改对照表）、每条写 `key:` 与 `fill:` 双光源（逆光/夜景必须补光、人脸对背景 ≤1:4）、负面词兜底（`underexposed, crushed blacks, murky shadows, too dark to read`）、曝光句保留为第 4 层 ②新增「定调图是亮度基线」：暗部不可读必须调亮重出，否则整场跟着暗 ③SKILL.md 硬规矩由「曝光句必写」升级为「亮度四层必写」④分镜模板契约第 9 条同步
+- **short-drama 2.6.0**：`episode_lint.py` 曝光覆盖率标记词扩展，纳入 `mid-key` / `lifted blacks` / `fill:` / `ambient fill`——只写曝光句或只写明度词都算已覆盖
+- **《阈限空间》EP001 SHOT-001 示范**：`moody teal-and-amber grade` → `teal-and-amber grade, mid-key exposure, shadows lifted to about 15% grey`；补 `Key: 巷深处路灯 / Fill: 巷口天光 + 湿石反射，脸对背景 1:3`；末尾加负面词
+
+### 优化了哪些
+
+- **治因不治症**：压暗来自调色词与单侧光，不是来自缺一句英文；四层里前两层才是主战场
+- **可执行的量化口径**：`shadows lifted to about 15% grey`、`face-to-background ratio about 1:3` 比 `balanced exposure` 更能约束模型
+- **批量前唯一闸门**：定调图带亮度验收项，避免「一张暗基线污染整场」
+- **兼容**：lint 判定放宽到任一亮度标记词，不逼写法唯一；老集 0 镜仍只出提示
+
+### 兼容性验证
+
+- `episode_lint` 三集实测：末世选择 EP001、阈限空间 EP002 各出 `ⓘ 未启用`（退出码 0）；阈限空间 EP001 因只示范 SHOT-001，按设计报「1/29 写一半」
+- storyboard `scripts/selftest.py` 13 项全过
+- SHOT 块结构、字段集未动；中文侧字段未动，改动只在关键帧英文正文
+
+---
+
 ## v2.11.0 — 2026-10-24
 
 **关键帧控制曝光：每条关键帧强制一句曝光校准（MINOR）。** 起因：用户反馈出图有的太暗有的太亮。实测三集 80 条关键帧——52 条含暗调词（dark/night/shadow/silhouette），**0 条**含任何曝光控制词，等于把曝光全交给模型默认行为。
