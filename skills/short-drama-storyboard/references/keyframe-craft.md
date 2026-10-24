@@ -26,6 +26,25 @@ accepted shot. A keyframe is not a compressed video prompt.
 1. **Purpose:** what the audience must notice now.
 2. **Focal subject:** exact asset and variant IDs.
 3. **Frame:** shot size, angle, lens intent, aspect-aware composition.
+   镜头语言在这里落地。lens intent 不是器材参数，是**渲染指令**——它控制画面
+   的空间感、透视和焦点分配，选法分三层，全部 `craft_default`：
+
+   | 层 | 选法 | 例子 |
+   |---|---|---|
+   | ① 段基准 | SEG 段落头声明本段基准焦段/景深口径，段内帧默认继承——重复即设计，跨镜一致性白送 | 「本段基准 35mm 深焦」 |
+   | ② 逐镜破格 | 本镜有特殊戏剧意图时点名破格+写理由（镜头语言是叙事决定） | 恐怖入侵感=广角近拍；孤独=长焦压缩；心理扭曲=畸变 |
+   | ③ 兜底表 | 段基准未定时按景别起步：远景/奇观 35mm deep focus；全景 35mm；中近景 50mm f/2.8；近景 85mm f/2.0；特写 85mm f/1.8（macro 可用）——只兜底，不主动套用 |
+
+   破格的判断顺序：先问这一镜要让观众**感觉**到什么（攻击性？孤立？窥视？平静？），
+   再选服务这个感觉的镜头语言；答不出特殊意图才落兜底表。同一场景重复同一焦段
+   本身是设计（观众第三次看到就知道「又来了」），不要为变化而变化。
+
+   落进英文正文的写法：镜头声明紧跟画风句（`Shot on 35mm lens, f/5.6, deep focus` /
+   `Shot on 85mm lens, f/1.8`），焦点分配写在主体描述之后（`Razor-sharp on his eyes,
+   the background dissolving into soft bokeh` / `subject sharp, background softly
+   blurred`）。焦段只写 24/35/50/85 四档锚点——图像模型不是真光学系统，档位更细
+   是浪费 token；f 值只用语义轴：深焦 f/5.6 以上、叙事 f/2.8、浅焦 f/2.0 以下。
+   UI 板/平面文字类镜头可用 `flat view` 覆盖整个镜头声明。
 4. **Geography:** Location/View, fixed anchors, foreground/background zones.
 5. **Boundary projection:** exact start position, body facing, pose, gaze, hands,
    held props. Give body facing for every person — it fixes which screen side they
@@ -161,6 +180,25 @@ Move these to motion:
 
 A single held pose may imply tension, but it must not require several moments.
 
+### 微表情的静帧化（判例与禁句）
+
+Static test 的边缘地带：`mouth corner twitching` 这类「一次微动作」写法。它描述的是
+一个可冻结的瞬间，不违反 Static test，但图像模型容易渲染成运动模糊脸或夸张鬼脸。
+处理办法二选一，按 `craft_default`：
+
+1. **动作后定格**（优先）：把进行时改写为动作刚完成的状态——`mouth corner caught
+   just after a single twitch` / `eyes just snapped back into focus`。语义还是那一下，
+   但渲染指令是静止的。
+2. **具体禁句**兜底：动作必须保持进行时写法时，句尾加 `no motion blur on face` /
+   `tears stay in her eyes, never fall` 这类**说结果**的禁句。禁句要具体到画面结果，
+   「静止」「不模糊」这类抽象禁令模型不执行；「never fall」之所以有效是因为它说了
+   泪该在哪。
+
+判例：`snatching`（抢夺中）→ 改 `fingers locked on the handle mid-grab`；
+`falling to knees` → `caught at the instant knees hit the floor`；`smiling
+wider and wider` → 改成单一定格宽度 `smile stretched ear to ear`（后者本身
+就是静帧合法写法，因为「拉到最宽」是状态不是过程）。
+
 ## Prompt economy
 
 Do not restate full character or location 设定集s. Bind accepted variants and
@@ -169,6 +207,44 @@ current Look, crucial spatial anchor, held prop, light direction, text state.
 
 Generic “cinematic, 8K, masterpiece” language cannot replace subject identity,
 geography, composition, or continuity.
+
+## 画风句与段级调色（质感锁 + 调色可覆盖）
+
+关键帧的画风统一句拆成两截，各自的生命周期不同：
+
+- **质感锁**（全局统一，永不变）：`photorealistic cinematic still, soft film
+  grain` 这类管「介质质感」的词。全集共用，保证「像同一部片」。
+- **调色词**（段级可覆盖）：`teal-and-amber grade` 这类管「色彩氛围」的词，
+  **从 SEG 段落头的色调设计按段翻译**，不再全局锁死。火海段可以整段
+  `fire-orange grade`，夜视段整段 `green night-vision grade`。
+
+为什么必须拆：段落头的色彩翻转设计（v2.8.0）如果进不了英文帧，就只是中文说明，
+渲染层永远全局一个色调——设计与执行两张皮。段内帧继承本段调色词，段间按翻转设计
+切换，这才闭环。同一段落内调色词必须一致；翻转没有叙事动机时不得换词（那是穿帮
+不是设计，见 lighting-craft 的段间色彩翻转）。
+
+常用中文色调 → 英文 grade 词对照（起步词表，可扩展）：
+
+| 段落色调设计 | 英文调色词 |
+|---|---|
+| 暖黄室内 / 治愈温暖 | warm amber grade |
+| 冷蓝夜色 / 骤冷恐怖 | cold blue-grey grade |
+| 火光 / 爆发 / 橙红战场 | fire-orange grade |
+| 灰烬 / 战后死寂 | desaturated ash-grey grade |
+| 夜视 / 科技监控 | green night-vision grade |
+| 系统UI / 电蓝 | electric-blue grade |
+| 晨光 / 平静收口 | dawn-grey grade / soft morning-light grade |
+| 诡异绿 / 异变 | sickly green grade |
+| 夕阳情绪收口 | golden-hour grade |
+| 无特定设计 | moody teal-and-amber grade（默认，段头未声明时） |
+
+**光线时间锚点**（同批处理）：SEG 段落头加一行「光线锚点」——`night / moonlit /
+lamplit / dawn / blue hour / overcast / harsh noon`——段内帧继承进正文。夜戏帧
+没有夜光词，图像模型就按默认白昼渲染；时间锚点是段的口径，不是每帧自由发挥。
+
+帧尾**情绪钩子**（可选，`craft_default`）：正文收尾处加一个 mood 词
+（`ominous / tense / serene / awe-struck / melancholic`），给调色和氛围一个明确
+的渲染方向。一帧只加一个，不堆砌；情绪已经由画面内容说清时不加。
 
 ## Failure examples
 

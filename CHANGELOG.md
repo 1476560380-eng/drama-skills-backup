@@ -5,6 +5,35 @@
 
 ---
 
+## v2.9.0 — 2026-10-24
+
+**关键帧从「写得对」升级到「渲染得对」：镜头语言 + 段级调色 + 光线锚点 + 静帧判例（MINOR，含一处契约修订）。** 来源：用户实测（C 版镜头语言对照案例胜出、B 版大气词汇版失败）+ 外部词库 github.com/Rylaispirit/cinematic-video-prompt-skill（只取词汇与模型行为教训，不取 8 段式公式）。
+
+### 改了哪些
+
+- **keyframe-craft 第 3 步「Frame」填实 lens intent**：三层选法（①SEG 段基准焦段/景深，段内继承 ②特殊戏剧意图逐镜破格+写理由 ③景别兜底表：远景/奇观 35mm deep focus、全景 35mm、中近 50mm f/2.8、近景 85mm f/2.0、特写 85mm f/1.8）；焦段只保留 24/35/50/85 四档锚点，f 值只用三条语义轴（深焦 f/5.6+ / 叙事 f/2.8 / 浅焦 f/2.0-）；镜头声明紧跟画风句、焦点分配写在主体描述后；UI 板可用 flat view 覆盖
+- **关键帧画风句拆两截**（⚠️ 契约修订）：`photorealistic cinematic still, soft film grain` 为全局质感锁；调色词改为**从 SEG 段落头色调按段翻译**（附 10 组中文色调→英文 grade 对照表，未声明时默认 moody teal-and-amber）；同段一致、段间按 v2.8.0 色彩翻转设计切换
+- **SEG 段落头新增两个可选字段**：`镜头基准`（本段默认焦段/景深口径）与`光线锚点`（night/moonlit/lamplit/dawn/blue hour/overcast/harsh noon），段内帧继承
+- **keyframe-craft 新增「微表情的静帧化」一节**：动作进行时写法改「动作后定格」优先（`mouth corner caught just after a single twitch`），必须保留进行时时配具体禁句（`no motion blur on face`、`tears stay in her eyes, never fall`）；判例三条（snatching / falling to knees / smiling wider and wider）
+- **keyframe-craft 新增帧尾情绪钩子**（可选）：一个 mood 词（ominous/tense/serene/awe-struck/melancholic），不堆砌
+- **SKILL.md 同步**：SEG 段落字段说明、「一集的关键帧要像同一部片」规则改写为质感锁+段级调色词双轨
+- **video-prompts 2.7.1（PATCH）**：seedance-2.0 方言补「多镜容器正文顶部声明总镜数」作为切点判定锚，并明确标注该手法未经实测
+
+### 优化了哪些
+
+- **治「拥挤」有据可依**：用户实测证明拥挤根因是零镜头语言（58 帧零 mm/f/景深词），而非信息过多；大气词汇（雾/留白/负空间）单独加反而变差，已弃用该路线
+- **色彩叙事闭环**：v2.8.0 的段间色彩翻转此前只存在于中文说明、渲染层全局锁 teal-amber 导致设计与执行两张皮，现在按段进英文帧
+- **镜头语言是叙事决定**：三层选法的排序把「意图→镜头」置于「景别→查表」之前，与运镜逐镜选（SHT-04）同一哲学；同行做法参照库布里克焦段系统、德金斯意图先行、王家卫杜可风超广角贴脸
+- **契约零破坏**：A1/A3/A4 均为填空与加法；唯一修订是画风句规则，现有项目不回写、旧产物仍合法、规则向前生效
+
+### 兼容性验证
+
+- `python3 scripts/selftest.py` 13 项全过；episode_lint 对《阈限空间》EP001/EP002 均通过
+- SHOT 块结构、字段集、lint 校验链、生成包分组未动
+- 现有项目（阈限空间 EP001/EP002、末世选择 EP001）未回写；如需按新规范刷新，需逐集确认
+
+---
+
 ## v2.8.0 — 2026-10-24
 
 **分镜技能吸收「情绪工程层」：节奏与情绪设计上线（MINOR）。** 来源：用户提供的《分镜skill参考.docx》（末世爽文 AI 漫剧分镜 prompt），经逐层对比后只吸收机制层、全部去题材化，其题材答案（色彩映射/三级跳/竖屏怼脸/单镜5s上限）一律不进。
