@@ -1,8 +1,33 @@
 {
-  "artifacts": {},
-  "last_action": "initialized",
+  "artifacts": {
+    "AR-PROFILE": {
+      "acceptance": {
+        "at": "2026-10-24T16:57:27.587153Z",
+        "decision": "accepted",
+        "note": "",
+        "outputs": {
+          "创作者决策/production-profile.jsonl": "276fccccbe2214dc80986aecb936a4babfc89b1169a4d4356ea174c6ce103dde"
+        }
+      },
+      "inputs": {},
+      "outputs": [
+        "创作者决策/production-profile.jsonl"
+      ],
+      "owner": "short-drama",
+      "review": null,
+      "updated_at": "2026-10-24T16:57:27.587331Z"
+    }
+  },
+  "authority": {
+    "/creator_authority/production_profile/choices": {
+      "decision": "创作者决策/production-profile.jsonl#CD-SD20",
+      "set_at": "2026-10-24T16:57:27.650243Z",
+      "value_sha256": "f06b090c746e86bc0a380957c02068c6ece3f217618c58993749347313a5bff3"
+    }
+  },
+  "last_action": "authority_set",
   "project_id": "SD-889FDD9F593D",
-  "project_layout_mode": "auto",
+  "project_layout_mode": "canonical",
   "schema_version": "2.0",
-  "updated_at": "2026-10-23T10:06:04.660222Z"
+  "updated_at": "2026-10-24T16:57:27.650528Z"
 }

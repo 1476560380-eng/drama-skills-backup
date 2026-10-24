@@ -196,6 +196,28 @@ def main() -> int:
             entries = {(m.group(1), m.group(2).strip()) for m in SETTING_HEADING_RE.finditer(docs["视觉设定"])}
         check_storyboard(docs["分镜"], entries, errs, notes)
 
+    # 项目卡过期检查（提示级，不阻断）
+    try:
+        proj = root.resolve().parent.parent
+        card = proj / "项目开发/项目卡.md"
+        if card.exists():
+            cm = card.stat().st_mtime
+            newer = []
+            for rel in ("short-drama.json", "项目开发/开工清单.md"):
+                f = proj / rel
+                if f.exists() and f.stat().st_mtime > cm + 1:
+                    newer.append(rel)
+            for doc in present:
+                f = root / f"{doc}.md"
+                if f.exists() and f.stat().st_mtime > cm + 1:
+                    newer.append(f"{root.name}/{doc}.md")
+            if newer:
+                notes.append(f"项目卡已过期（{'、'.join(newer[:4])} 比卡新）——刷新：python3 scripts/project_card.py \"{proj}\"")
+        elif (proj / "short-drama.json").exists():
+            notes.append(f"本项目还没有项目卡——生成：python3 scripts/project_card.py \"{proj}\"")
+    except Exception:
+        pass
+
     result = {
         "episode": str(root),
         "present": present,

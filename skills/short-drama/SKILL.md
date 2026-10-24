@@ -1,7 +1,7 @@
 ---
 name: short-drama
 description: 基于文件系统初始化和继续短剧或漫剧项目，提供 creator-first 五文档路由、本地 Dashboard、制作形态与 Look Development 决策。用户提出“创建/继续短剧项目”“看进度/下一步”“做 Look Development”“打开 dashboard/短剧创作台”“导出制作资料”，或任务跨多个创作阶段时使用；明确的写作、资产、提示词、分镜、剪辑或审查请求由对应子 skill 直接处理。
-version: 2.8.1
+version: 2.9.0
 license: MIT
 ---
 
@@ -14,6 +14,20 @@ license: MIT
 当前创作统一使用 [creator-first 工作流](references/creator-workflow.md)：每集按需维护
 `剧本.md`、`视觉设定.md`、`分镜.md`、`图片提示词.md`、`视频提示词.md`，不建立并行的结构化创作真相。
 具体写法见 [五份创作文档](references/creator-documents.md)。
+
+## 项目卡（一屏读完的项目口径）
+
+任何创作请求之前，先读 `项目开发/项目卡.md`——它把画幅、集长、模型、画风句、强制项、人物代称、音色、进度与**源文件矛盾**汇总成一屏。**不需要创作者说「进入某个项目」；提到项目名或路径就直接读卡。**
+
+```bash
+python3 {技能目录}/scripts/project_card.py <项目根目录>        # 生成/刷新
+python3 {技能目录}/scripts/project_card.py <项目根目录> --check # 只查是否过期（退出码 1=过期）
+```
+
+- **卡是索引不是真相**：真相仍在 `short-drama.json`、`项目开发/开工清单.md` 与各集文档；卡由脚本生成，**手改无效**。
+- **卡有「待裁决」区**：源文件互相矛盾时列在这里，不要自行挑一个——按创作者的决定改源文件，再刷新卡。
+- **卡过期要能查出来**：卡里记各源文件 mtime；`episode_lint.py` 会提示「项目卡已过期」，超 3 个源文件比卡新就该刷新。
+- 写入口径（如目标视频模型）走 `publish → accept → set-authority` 三步，不要直接改 json。
 
 ## 阶段闸门（每写完一份就跑，缺文档也能跑）
 
