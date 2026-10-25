@@ -83,6 +83,7 @@ python3 {技能目录}/scripts/episode_lint.py 剧集/<EP> --only 分镜 # 只�
 | 已有多集完整剧本/散稿识别分集 | `$short-drama-develop` 按实际边界建立临时索引 |
 | 分析长篇原著 | `$short-drama-novel-analyze`，仅在用户需要时 |
 | 收参考图、分类登记、锚图裁决、绑定校验 | `$short-drama-references`（参考图生命周期 owner） |
+| 看这集怎么排、要去找什么参考镜头 | `$short-drama-storyboard` 前瞻模式 → `分镜前瞻.md` |
 | 写或改单集剧本 | `$short-drama-write` → `剧本.md` |
 | 拆人物、造型、地点、道具 | `$short-drama-assets` → `视觉设定.md` |
 | 写资产图片提示词 | `$short-drama-image-prompts` → `图片提示词.md` |
