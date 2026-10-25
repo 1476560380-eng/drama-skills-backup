@@ -55,6 +55,8 @@ def collect(root: Path) -> dict:
     fmt = cfg.get("format") or {}
     checklist_p = root / "项目开发/开工清单.md"
     checklist = read(checklist_p)
+    rules_p = root / "项目开发/文件规则.md"
+    rules = read(rules_p)
 
     episodes = []
     for d in episode_dirs(root):
@@ -102,7 +104,9 @@ def collect(root: Path) -> dict:
         "checklist_lang": lang_check.strip(),
         "genre": genre.strip(),
         "episodes": episodes,
-        "sources": [cfg_path, checklist_p] + [root / "剧集" / e["name"] / n
+        "rules": rules,
+        "rules_exists": rules_p.exists(),
+        "sources": [cfg_path, checklist_p, rules_p] + [root / "剧集" / e["name"] / n
                                              for e in episodes for n in ("分镜.md", "视觉设定.md")
                                              if (root / "剧集" / e["name"] / n).exists()],
     }
@@ -128,7 +132,7 @@ def build(root: Path, data: dict) -> str:
     conflicts = []
     if data["json_model"] and data["checklist_model"] and data["json_model"] not in data["checklist_model"]:
         conflicts.append(f"视频模型：json `{data['json_model']}` ↔ 开工清单 `{data['checklist_model']}`")
-    if not data["json_model"] and data["checklist_model"]:
+    if not data["json_model"] and data["checklist_model"] and not data["checklist_model"].startswith("未定"):
         conflicts.append(f"视频模型：json 未写（`{data['json_model_status']}`）但开工清单写 `{data['checklist_model']}`")
     # 关键帧正文语言（开工清单）与图片提示词语言（json.prompt_language）是两个口径，不判冲突
     for e in eps:
@@ -137,6 +141,15 @@ def build(root: Path, data: dict) -> str:
         body_midkey = "mid-key exposure" in sb
         if sb and head_moody and body_midkey:
             conflicts.append(f"画风句（{e['name']}）：头部仍写 `moody`，但关键帧正文已改成 `mid-key exposure`——同集内两处口径不一致")
+    # 设定图口径：json 的 prompt_language 与文件规则要求的口径是否打架
+    lang = (data["json_lang"] or "").lower()
+    rules_text = data.get("rules") or ""
+    if lang and lang not in ("zh-cn", "zh") and "中文商业设定卡" in rules_text:
+        kinds = [k for k in ("T-CHA", "T-PRP", "T-LOC", "T-UI") if k in rules_text]
+        conflicts.append(
+            f"设定图口径：`prompt_language` 是 `{data['json_lang']}`（英文身份板），但《文件规则》要求走中文商业设定卡"
+            f"（{('、'.join(kinds)) or '卡式'}：版式+HEX 色板+留白档案卡）；两者不可混写，需创作者裁决"
+        )
     if data["checklist_style"] and data["checklist_style"] not in ("未定", "—", "") and style and data["checklist_style"] not in style:
         conflicts.append(f"画风：开工清单 `{data['checklist_style']}` ↔ 分镜头部画风句不一致")
 
@@ -168,6 +181,22 @@ def build(root: Path, data: dict) -> str:
     L.append("## 强制项（写新镜自动带）")
     L.append("")
     L.append(f"{strict or '（分镜头部未写强制项 → 按默认全强制：轴线锁、亮度口径）'}")
+    L.append("")
+    L.append("## 文件规则（每个文件写什么、必须遵守什么）")
+    L.append("")
+    if data.get("rules"):
+        L.append("> 规则正文源头：`项目开发/文件规则.md`（此处整段抄录，改规则改那个文件；卡里手改下次覆盖）。")
+        L.append("")
+        body = data["rules"]
+        # 去掉规则文件自身的标题行与首段引用块，避免在卡里重复两级标题
+        lines = body.splitlines()
+        i = 0
+        while i < len(lines) and (lines[i].startswith("# ") or lines[i].startswith(">")):
+            i += 1
+        # 规则正文里的二级标题降为三级，避免撑破项目卡自身的章节层级
+        L.append("\n".join(lines[i:]).strip().replace("\n## ", "\n### "))
+    else:
+        L.append("（项目里还没有 `项目开发/文件规则.md`——规则只散落在对话里，换个人接手就丢）")
     L.append("")
     if people:
         L.append("## 人物与画面代称")
