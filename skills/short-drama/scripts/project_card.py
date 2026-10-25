@@ -88,6 +88,26 @@ def collect(root: Path) -> dict:
     lang_check = pick(r"\|\s*关键帧正文语言\s*\|\s*([^|]+)\|", checklist)
     genre = pick(r"\|\s*题材赛道\s*\|\s*([^|]+)\|", checklist)
 
+    # 参考图锚（由 short-drama-references 登记表提供，缺失则空）
+    reg_p = root / "输入/参考图/登记表.md"
+    anchors = {}
+    if reg_p.exists():
+        header = None
+        for line in read(reg_p).splitlines():
+            s = line.strip()
+            if not s.startswith("|"):
+                continue
+            cells = [c.strip() for c in s.strip("|").split("|")]
+            if header is None:
+                header = cells
+                continue
+            if all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+                continue
+            row = dict(zip(header, cells))
+            f, cls, mark = row.get("文件", ""), row.get("主类", ""), row.get("锚", "")
+            if f and mark in ("✅", "√", "✓", "Y", "y", "是"):
+                anchors.setdefault(cls, []).append(f)
+
     prod = (cfg.get("creator_authority") or {}).get("production_profile") or {}
     choices = prod.get("choices") or {}
 
@@ -106,7 +126,8 @@ def collect(root: Path) -> dict:
         "episodes": episodes,
         "rules": rules,
         "rules_exists": rules_p.exists(),
-        "sources": [cfg_path, checklist_p, rules_p] + [root / "剧集" / e["name"] / n
+        "anchors": anchors,
+        "sources": [cfg_path, checklist_p] + ([reg_p] if reg_p.exists() else []) + [root / "剧集" / e["name"] / n
                                              for e in episodes for n in ("分镜.md", "视觉设定.md")
                                              if (root / "剧集" / e["name"] / n).exists()],
     }
@@ -165,6 +186,11 @@ def build(root: Path, data: dict) -> str:
     L.append(f"- 画幅：**{data['json_aspect'] or '（未定）'}** ｜ 集长：**{fmt_sec(data['json_seconds'])}** ｜ 集数：**{data['json_eps'] or '（未定）'}**")
     L.append(f"- 目标视频模型：**{model}** ｜ 题材：{data['genre'] or '（未填）'}")
     L.append(f"- 关键帧正文语言：**{data['checklist_lang'] or '（未填）'}** ｜ 图片提示词语言：**{data['json_lang'] or '（未填）'}**（两者本就不同口径）")
+    if data.get("anchors"):
+        pairs = "｜".join(f"{k}={('、'.join(v))}" for k, v in data["anchors"].items())
+        L.append(f"- 参考图锚（每类最多 1 张）：{pairs}")
+    else:
+        L.append("- 参考图锚：无（还没有分类登记的参考图）")
     L.append("")
     L.append("## 画风统一句（逐字继承，不重写）")
     L.append("")
