@@ -185,9 +185,17 @@ def build(root: Path, data: dict) -> str:
     L.append("## 文件规则（每个文件写什么、必须遵守什么）")
     L.append("")
     if data.get("rules"):
-        L.append("> 规则正文源头：`项目开发/文件规则.md`（此处整段抄录，改规则改那个文件；卡里手改下次覆盖）。")
-        L.append("")
         body = data["rules"]
+        ver = re.search(r"继承自：技能 v(\d+\.\d+\.\d+)", body)
+        spec = 0
+        if "## 项目特化" in body:
+            spec_block = body.split("## 项目特化", 1)[1]
+            spec = len([l for l in spec_block.splitlines()
+                        if l.startswith("- ") and "本项目特有规则从这里往下写" not in l])
+        L.append("> 规则正文源头：`项目开发/文件规则.md`（此处整段抄录，改规则改那个文件；卡里手改下次覆盖）。")
+        L.append(f"> 规则版本：**v{ver.group(1) if ver else '未标（手写版）'}**"
+                 f" ｜ 项目特化：**{spec} 条**（只本剧生效，升级技能不动它）")
+        L.append("")
         # 去掉规则文件自身的标题行与首段引用块，避免在卡里重复两级标题
         lines = body.splitlines()
         i = 0
