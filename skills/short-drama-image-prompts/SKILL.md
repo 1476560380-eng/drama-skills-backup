@@ -2,6 +2,7 @@
 name: short-drama-image-prompts
 description: 为短剧人物、造型、地点、道具和状态编写或修改可直接复制的图片提示词 Markdown。用户提到角色设定图、三视图、参考图、场景板、道具图、风格帧、Look Development、状态变体或局部编辑提示词时使用；不生成图片，也不调用供应商。
 license: MIT
+version: 3.0.0
 ---
 
 # 短剧资产图片提示词
@@ -62,7 +63,7 @@ license: MIT
 - 功能道具、尺度、材质与文字：[道具板](references/prop-plate.md)
 - 造型和状态变体：[造型与状态变体](references/look-and-state-variant.md)
 - 多对象组合板：[Production Sheet 配方](references/production-sheet-recipes.md)
-- 中文商业设定卡模板（分区版式+HEX色板+留白档案卡）：[中文资产卡模板](references/asset-card-template-zh.md)
+- 资产交付卡版式 v3（五区骨架＋四视图一致性＋表情裁剪下限＋比例尺部位锚线＋群像卡 T-GRP）：[中文资产卡模板](references/asset-card-template-zh.md)
 - 比较视觉方向的代表帧：[Lookdev 风格帧](references/lookdev-frame.md)
 - 局部修改和 preserve set：[定点修改](references/edit-and-revision.md)
 - 完成前的可生成性检查：[审查与示例](references/review-and-fixtures.md)

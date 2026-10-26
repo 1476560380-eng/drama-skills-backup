@@ -166,10 +166,10 @@ def build(root: Path, data: dict) -> str:
     lang = (data["json_lang"] or "").lower()
     rules_text = data.get("rules") or ""
     if lang and lang not in ("zh-cn", "zh") and "中文商业设定卡" in rules_text:
-        kinds = [k for k in ("T-CHA", "T-PRP", "T-LOC", "T-UI") if k in rules_text]
+        kinds = [k for k in ("T-CHA", "T-GRP", "T-PRP", "T-LOC", "T-UI") if k in rules_text]
         conflicts.append(
             f"设定图口径：`prompt_language` 是 `{data['json_lang']}`（英文身份板），但《文件规则》要求走中文商业设定卡"
-            f"（{('、'.join(kinds)) or '卡式'}：版式+HEX 色板+留白档案卡）；两者不可混写，需创作者裁决"
+            f"（{('、'.join(kinds)) or '卡式'}：五区版式+单行 HEX 色板+部位锚线比例尺）；两者不可混写，需创作者裁决"
         )
     if data["checklist_style"] and data["checklist_style"] not in ("未定", "—", "") and style and data["checklist_style"] not in style:
         conflicts.append(f"画风：开工清单 `{data['checklist_style']}` ↔ 分镜头部画风句不一致")
