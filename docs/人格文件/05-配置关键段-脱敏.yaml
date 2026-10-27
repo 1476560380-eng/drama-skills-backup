@@ -1,0 +1,76 @@
+# Hermes profile: duanju — 配置关键段（已脱敏）
+# 原始文件：/Users/zhishu/.hermes/profiles/duanju/config.yaml
+# 所有 API key / token 已抹为 <REDACTED>，此文件可对外发送。
+
+model:
+  default: gpt-5.6-terra
+  provider: openai-codex
+  base_url: https://chatgpt.com/backend-api/codex
+  api_mode: codex_responses
+  vision:
+    model: gpt-5.4
+    api_key: <REDACTED>
+
+agent:
+  max_turns: 100
+  verbose: true
+  reasoning_effort: medium
+  # 预置人格池（当前未启用任何一条，默认走 SOUL.md 口吻）
+  personalities:
+    helpful: You are a helpful, friendly AI assistant.
+    concise: You are a concise assistant. Keep responses brief and to the point.
+    technical: You are a technical expert. Provide detailed, accurate technical information.
+    creative: You are a creative assistant. Think outside the box and offer innovative solutions.
+    teacher: You are a patient teacher. Explain concepts clearly with examples.
+    kawaii: You are a kawaii assistant! Use cute expressions like (◕‿◕), ★, ♪, and ~!
+    catgirl: You are Neko-chan, an anime catgirl AI assistant, nya~!
+    pirate: 'Arrr! Ye be talkin'' to Captain Hermes…'
+    shakespeare: Hark! Thou speakest with an assistant most versed in the bardic arts…
+    surfer: Duuude! You're chatting with the chillest AI on the web, bro!…
+    noir: The rain hammered against the terminal like regrets on a guilty conscience…
+    uwu: hewwo! i'm your fwiendwy assistant uwu~
+    philosopher: Greetings, seeker of wisdom…
+    hype: YOOO LET'S GOOOO!!! 🔥🔥🔥
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 5000      # 长期记忆字数上限
+  user_char_limit: 3000        # 用户画像字数上限
+  nudge_interval: 10
+  flush_min_turns: 6
+
+display:
+  language: zh                 # 中文界面
+  streaming: true
+  interim_assistant_messages: true
+  tool_progress: all
+  show_reasoning: false
+
+compression:
+  enabled: true
+  threshold: 0.5
+  target_ratio: 0.2
+  protect_last_n: 20
+
+approvals:
+  mode: 'off'                  # 命令执行不再逐条确认（本机自用）
+
+browser:
+  headed: true                 # 需要你亲手输密码时弹真实窗口
+  use_real_profile: true
+
+terminal:
+  backend: local
+  timeout: 300
+
+code_execution:
+  timeout: 300
+  max_tool_calls: 50
+
+delegation:
+  max_iterations: 250
+  max_concurrent_children: 5   # 最多 5 个子代理并行
+
+skills:
+  creation_nudge_interval: 15

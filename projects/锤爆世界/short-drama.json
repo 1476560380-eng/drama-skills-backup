@@ -25,13 +25,20 @@
   },
   "format": {
     "aspect_ratio": "16:9",
-    "episode_count": null,
+    "episode_count": 20,
+    "episode_seconds_range": {
+      "decided_at": "2026-10-26",
+      "decided_by": "creator",
+      "max": 150.0,
+      "short_episode_policy": "不扩写按正常交付（2026-10-26 创作者裁定：短集不注水不挂待决标记，按剧情拍子实排）",
+      "soft_target": 80.0
+    },
     "pacing": {
-      "seconds_per_action_paragraph": null,
-      "spoken_characters_per_second": null
+      "seconds_per_action_paragraph": 3.0,
+      "spoken_characters_per_second": 4.5
     },
     "prompt_language": "zh-CN",
-    "target_seconds_per_episode": 90.0
+    "target_seconds_per_episode": 80.0
   },
   "language": "zh",
   "project_id": "SD-8C0237238359",
